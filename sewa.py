@@ -1,47 +1,47 @@
 import sqlite3
-from database import data_manager
 from penyewa import penyewa
-# from mobil import mobil
+from mobil import mobil
+from tipe_mobil import tipe_mobil
 
-class sewa(data_manager):
-    global username
-    def set_lama_sewa(self, lama_sewa):
-        self.query = 'INSERT INTO sewa (lama_sewa) VALUES (\'%s\')'
-        self.query = self.query % (lama_sewa) 
-        return ('data berhasil dimasukkan')
-        self.exe_query(self.query)
+
+data_mobil = mobil()
+tipe_mobil = tipe_mobil()
+penyewa = penyewa()
+
+class sewa():
+    def __init__(self):
+        self.__lama_sewa = None
+        self.__id_mobil = None
+        self.__id_penyewa = None
+        self.con = sqlite3.connect("sewamobil.sqlite")
+        self.cursor = self.con.cursor()
+
+    def set_data_sewa(self):
+        self.__id_penyewa = int(input('ID anda: '))
+        self.__id_mobil = int(input('masukkan id mobil yang disewa: '))
+        self.__lama_sewa = int(input('berapa lama anda menyewa mobil: '))
+        self.query = 'INSERT INTO sewa (id_penyewa, id_mobil, lama_sewa) VALUES (?, ?, ?)'
+        self.cursor.execute(self.query, [self.__id_penyewa, self.__id_mobil, self.__lama_sewa])
+        self.con.commit()
+        print ('berhasil menyewa')
+
+    def get_harga_sewa(self):
+        id = int(input('masukkan ID mobil yang disewa: '))
+        self.query = 'SELECT harga_sewa FROM sewa JOIN mobil ON sewa.id_mobil = mobil.id WHERE id = ?'
+        self.cursor.execute(self.query, [id])
+        self.con.commit()
+        return self.__harga_sewa
 
     def get_lama_sewa(self):
-        return self.lama_sewa
+        self.id_sewa = int(input('masukkan id sewa: '))
+        self.query = 'SELECT lama_sewa FROM sewa WHERE = ?'
+        self.cursor.execute(self.query, [self.id_sewa])
+        self.con.commit()
+        return self.get_lama_sewa()
 
-    def sewa_mobil(self):
-        self.query = '''SELECT penyewa.nama_penyewa, petugas.nama_petugas, mobil.nama_mobil, mobil.harga_sewa, sewa.lama_sewa 
-                    FROM sewa INNER JOIN penyewa ON sewa.id_penyewa = penyewa.id_penyewa
-                    ON sewa.id_petugas = petugas.id_petugas
-                    ON sewa.id_mobil = mobil.id_mobil'''
-        self.exe_query(self.query)
+    def get_harga_total(self):
+        return self.get_lama_sewa() * get_harga_sewa()
 
-    # def set_datasewa(self, id_penyewa, id_mobil):
-    #     self.query = 'INSERT INTO sewa (id_penyewa, id_mobil) VALUES (\'%s\',\'%s\')
-    #     self.query = self.query % (id_penyewa, id_mobil) 
-    #     print ('data berhasil dimasukkan')
-    #     self.exe_query(self.query)
+# sewa_mobil = sewa()
+# sewa_mobil.set_data_sewa()
 
-    def cancel_sewa(self):
-        id = input('masukkan id: ')
-        self.query = f'DELETE FROM sewa WHERE id = {id}'
-        print('sewa mobil berhasil dibatalkan')
-        self.exe_query(self.query)
-
-    @staticmethod
-    def get_harga_total():
-        return self.lama_sewa * get_harga_sewa()
-
-# add_lama_sewa = sewa()
-# add_lama_sewa.tambah_lama_sewa(int(input('masukkan lama sewa mobil: ')))
-
-# add_datasewa = sewa()
-# add_datasewa.set_datasewa()
-
-# batalkan_sewa  = sewa()
-# batalkan_sewa.cancel_sewa()

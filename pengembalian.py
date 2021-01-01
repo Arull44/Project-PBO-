@@ -1,17 +1,20 @@
 import sqlite3
+import datetime
 from sewa import sewa
 
 class pengembalian(sewa):
-    denda = 100000
-    def __init__(self, tanggal_pengembalian):
-        super().__init__(self.lama_sewa)
-        self.tanggal_pengembalian = tanggal_pengembalian
+    def __init__(self, tanggal):
+        super().__init__()
+        self.denda_per_hari = 100000
+        self.year, self.month, self.day = map(int, tanggal.split('-'))
 
-
-    # def date_pengembalian(self):
-    #     self.tanggal_pengembalian = #ambil tanggal sekarang
-    #     self.keterlambatan = 
-
-    @staticmethod
     def hitung_denda(self):
-        return self.keterlambatan * self.denda
+        tgl_sewa = datetime.date(self.year, self.month, self.day)
+        today = datetime.date.today()
+        selisih = tgl_sewa - today
+        print('selisih hari: '+str(selisih.days))
+        if(selisih.days < sewa.get_lama_sewa()):
+            denda = self.denda_per_hari * (selisih.days+3) * -1
+        else:
+            denda = 0
+        return denda

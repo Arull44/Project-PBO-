@@ -22,6 +22,15 @@ class table(data_manager):
             PRIMARY KEY ("id" AUTOINCREMENT))"""
         self.exe_query(self.query)
 
+    def create_table_petugas(self):
+        self.query = """CREATE TABLE "petugas" (
+            "id_petugas" INTEGER NOT NULL UNIQUE,
+            "nama_petugas" TEXT NOT NULL,
+            "username" TEXT NOT NULL,
+            "password" TEXT NOT NULL,
+            PRIMARY KEY ("id_petugas" AUTOINCREMENT))"""
+        self.exe_query(self.query)
+
     def create_table_tipemobil(self):
         self.query = """CREATE TABLE "tipe_mobil" (
             "id" INTEGER NOT NULL UNIQUE,
@@ -63,8 +72,9 @@ class table(data_manager):
         self.exe_query(self.query)
 
 # run the code to make the table
-create_table = table()
+# create_table = table()
 # create_table.create_table_penyewa()
+# create_table.create_table_petugas()
 # create_table.create_table_tipemobil()
 # create_table.create_table_mobil()
 # create_table.create_table_pengembalian()

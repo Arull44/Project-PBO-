@@ -1,38 +1,37 @@
 import sqlite3
-from database import data_manager
+from register import register
 
-class penyewa(data_manager):
-    def get_data_penyewa(self):
-        self.query = 'SELECT * FROM penyewa'
-        self.exe_query(self.query)
-        self.all_results = self.cursor.fetchall()
-        for result in self.all_results:
-            print(result)
-        # self.con.close()
-        
-        print('''PILIH:
-        1. hapus data penyewa
-        2. edit data penyewa''')
-        pilihan = (input('masukkan pilihan: '))
-        if pilihan == '1':
-            penyewa.delete_penyewa()
-        elif pilihan == '2':
-            penyewa.update_penyewa(int(input('masukkan id: ')),input('masukkan nama anda: '), input('masukkan username: '), input('masukkan password: '), input('masukkan tanggal lahir: '), input('masukkan nomor telepon: '),input('masukkan alamat: '),input('masukkan kota: '))
+class penyewa(register):
+    def __init__(self):
+        super().__init__()
+        self.con = sqlite3.connect("sewamobil.sqlite")
+        self.cursor = self.con.cursor()
 
-    def delete_penyewa(self):
-        id = input('masukkan id: ')
-        self.query = f'DELETE FROM penyewa WHERE id = {id}'
-        self.exe_query(self.query)
+    def get_data_penyewa_by_penyewa(self):
+        username = input('masukkan username anda: ')
+        self.query = 'SELECT nama_penyewa, username, password, tanggal lahir, nomor_telepon, alamat, nama_kota FROM penyewa WHERE username = ?'
+        self.cursor.execute(self.query, [username])
+        self.con.commit()
+        self.result = self.cursor.fetchone()
+        print (result)
         self.con.close()
-        print('data berhasil dihapus')
 
-    def update_penyewa(self, id, nama_penyewa, username, password, tanggal_lahir, nomor_telepon, alamat, nama_kota):
-        self.query = (f'''UPDATE penyewa SET nama_penyewa = "{nama_penyewa}", username = "{username}", password = "{password}", tanggal_lahir = "{tanggal_lahir}", nomor_telepon = "{nomor_telepon}", alamat = "{alamat}", nama_kota = "{nama_kota}" WHERE id = {id}''')
-        self.exe_query(self.query)
+    def update_penyewa(self):
+        username = input("masukkan username: ")
+        self.__nama_penyewa = input("masukkan nama anda: ")
+        self.__username = input("masukkan username: ")
+        self.__password = input("masukkan password: ")
+        self.__tanggal_lahir = input("masukkan tanggal lahir anda (YYYY-MM-DD): ")
+        self.__nomor_telepon = input("masukkan nomor telepon: ")
+        self.__alamat = input("masukkan alamat anda: ")
+        self.__nama_kota = input("masukkan kota anda: ")
+        self.query = '''UPDATE penyewa SET nama_penyewa = ?, username = ?, password = ?, tanggal_lahir = ?, nomor_telepon = ?, alamat = ?, nama_kota = ? WHERE username = ?'''
+        self.cursor.execute(self.query, [self.__nama_penyewa, self.__username, self.__password, self.__tanggal_lahir, self.__nomor_telepon, self.__alamat, self.__nama_kota, username])
+        self.con.commit()
         self.con.close()
         print('data berhasil diubah')
-        
-penyewa = penyewa()
+
+# penyewa = penyewa()
 # penyewa.get_data_penyewa()
 # penyewa.delete_penyewa()
-# penyewa.update_penyewa(int(input('masukkan id: ')),input('masukkan nama anda: '), input('masukkan username: '), input('masukkan password: '), input('masukkan tanggal lahir: '), input('masukkan nomor telepon: '),input('masukkan alamat: '),input('masukkan kota: '))
+# penyewa.update_penyewa(input('masukkan id atau username: '))
