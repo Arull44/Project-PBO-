@@ -22,10 +22,10 @@ class petugas(register):
         self.__username = input("masukkan username: ")
         self.__password = input("masukkan password: ")
         self.query = '''UPDATE petugas SET nama_petugas = ?, username = ?, password = ? WHERE username = ?'''
-        self.cursor.execute(self.query, [self.__nama_petugas, self.__username, self.__password])
+        self.cursor.execute(self.query, [self.__nama_petugas, self.__username, self.__password, username])
         self.con.commit()
-        self.con.close()
         print('data berhasil diubah')
+        self.con.close()
 
     def get_data_penyewa(self):
         self.query = '''SELECT * FROM penyewa'''
@@ -41,6 +41,13 @@ class petugas(register):
         self.query = f'DELETE FROM penyewa WHERE id = ?'
         self.cursor.execute(self.query, [id])
         self.con.commit()
-        self.con.close()
         print('data berhasil dihapus')
+        self.con.close()
 
+    def delete_petugas(self):
+        id = input('masukkan id: ')
+        self.query = f'DELETE FROM petugas WHERE id_petugas = ?'
+        self.cursor.execute(self.query, [id])
+        self.con.commit()
+        print('data berhasil dihapus')
+        self.con.close()

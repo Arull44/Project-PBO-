@@ -1,4 +1,5 @@
 import sqlite3
+
 from sewa import sewa
 
 class pengembalian(sewa):
@@ -8,7 +9,7 @@ class pengembalian(sewa):
         self.hari = hari
         self.id_sewa = id_sewa
         self.con = sqlite3.connect("sewamobil.sqlite")
-        self.cursor = self.con.cursor() # kaya objek/perintah buat akses databasenya
+        self.cursor = self.con.cursor()
 
     def get_hari(self):
         return self.hari
@@ -30,8 +31,6 @@ class pengembalian(sewa):
     def get_denda(self):
         return self.__set_data_pengembalian()
 
-
 # denda = pengembalian(input('terlambat berapa hari: '), input('ID sewa: '))
 # print(denda.get_denda())
 # denda.set_data_pengembalian()
-
