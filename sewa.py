@@ -1,20 +1,17 @@
 import sqlite3
 from penyewa import penyewa
 from mobil import mobil
-from tipe_mobil import tipe_mobil
 
-
-data_mobil = mobil()
-tipe_mobil = tipe_mobil()
-penyewa = penyewa()
 
 class sewa():
     def __init__(self):
-        self.__lama_sewa = None
-        self.__id_mobil = None
-        self.__id_penyewa = None
-        self.con = sqlite3.connect("sewamobil.sqlite")
+        self.con = sqlite3.connect("sewamobil.sqlite")       
         self.cursor = self.con.cursor()
+        self.__lama_sewa = 0
+        self.__id_mobil = 0
+        self.__id_penyewa = 0
+        self.get_harga_total()
+        self.__set_harga_total()   
 
     def set_data_sewa(self):
         self.__id_penyewa = int(input('ID anda: '))
@@ -25,23 +22,30 @@ class sewa():
         self.con.commit()
         print ('berhasil menyewa')
 
-    def get_harga_sewa(self):
-        id = int(input('masukkan ID mobil yang disewa: '))
-        self.query = 'SELECT harga_sewa FROM sewa JOIN mobil ON sewa.id_mobil = mobil.id WHERE id = ?'
-        self.cursor.execute(self.query, [id])
-        self.con.commit()
-        return self.__harga_sewa
+    def get_id_penyewa(self):
+        return self.__id_penyewa
+
+    def get_id_mobil(self):
+        return self.__id_mobil
 
     def get_lama_sewa(self):
-        self.id_sewa = int(input('masukkan id sewa: '))
-        self.query = 'SELECT lama_sewa FROM sewa WHERE = ?'
-        self.cursor.execute(self.query, [self.id_sewa])
+        return self.__lama_sewa
+
+    def __set_harga_total(self):
+        self.query = 'SELECT harga_sewa FROM sewa JOIN mobil ON sewa.id_mobil = mobil.id WHERE mobil.id = ?'
+        self.cursor.execute(self.query, [self.get_id_mobil()])
         self.con.commit()
-        return self.get_lama_sewa()
+        result = self.cursor.fetchone()
+        if(result):
+            return self.get_lama_sewa() * int(result[0])
 
     def get_harga_total(self):
-        return self.get_lama_sewa() * get_harga_sewa()
+        return self.__set_harga_total()
+
+    def close_database(self):
+        self.con.close()
 
 # sewa_mobil = sewa()
 # sewa_mobil.set_data_sewa()
+# print('TOTAL HARGA SEWA:', sewa_mobil.get_harga_total())
 

@@ -1,20 +1,37 @@
 import sqlite3
-import datetime
 from sewa import sewa
 
 class pengembalian(sewa):
-    def __init__(self, tanggal):
-        super().__init__()
+    def __init__(self, hari, id_sewa):
+        super(sewa, self).__init__()
         self.denda_per_hari = 100000
-        self.year, self.month, self.day = map(int, tanggal.split('-'))
+        self.hari = hari
+        self.id_sewa = id_sewa
+        self.con = sqlite3.connect("sewamobil.sqlite")
+        self.cursor = self.con.cursor() # kaya objek/perintah buat akses databasenya
 
-    def hitung_denda(self):
-        tgl_sewa = datetime.date(self.year, self.month, self.day)
-        today = datetime.date.today()
-        selisih = tgl_sewa - today
-        print('selisih hari: '+str(selisih.days))
-        if(selisih.days < sewa.get_lama_sewa()):
-            denda = self.denda_per_hari * (selisih.days+3) * -1
+    def get_hari(self):
+        return self.hari
+    
+    def get_id_sewa(self):
+        return self.id_sewa
+
+    def __set_data_pengembalian(self):
+        self.query = 'INSERT INTO pengembalian (hari, id_sewa) VALUES (?, ?)'
+        self.cursor.execute(self.query, [self.get_hari(), self.get_id_sewa()])
+        self.con.commit()
+        if int(self.hari) > 0:
+            self.total_denda = self.denda_per_hari * int(self.get_hari())
         else:
-            denda = 0
-        return denda
+            self.total_denda = 0
+        return self.total_denda
+        self.con.close()
+
+    def get_denda(self):
+        return self.__set_data_pengembalian()
+
+
+# denda = pengembalian(input('terlambat berapa hari: '), input('ID sewa: '))
+# print(denda.get_denda())
+# denda.set_data_pengembalian()
+
