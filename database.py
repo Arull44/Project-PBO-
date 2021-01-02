@@ -64,8 +64,7 @@ class table(data_manager):
     def create_table_pengembalian(self):
         self.query = """CREATE TABLE "pengembalian"(
             "id" INTEGER NOT NULL UNIQUE,
-            "tanggal_pengembalian" DATE NOT NULL,
-            "denda" INTEGER,
+            "hari" INTEGER NOT NULL,
             "id_sewa" INTEGER NOT NULL,
             FOREIGN KEY ("id_sewa") REFERENCES "sewa"("id"),
             PRIMARY KEY ("id" AUTOINCREMENT))"""
